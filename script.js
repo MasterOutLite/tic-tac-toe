@@ -21,8 +21,10 @@ fields.forEach((element) => {
 
     if (isStepCross == true) {
       element.classList.add("cross");
+      element.textContent = "x";
     } else {
       element.classList.add("circle");
+      element.textContent = "0";
     }
     score--;
     isStepCross = isStepCross ? false : true;
