@@ -60,7 +60,8 @@ function checkWiner() {
       if (fields[element[i]].textContent === typeField) {
         numberMatches++;
         if (numberMatches >= 3) {
-          whoseElement.textContent = "Переможцем є: " + typeField;
+          document.querySelector("#textWiner").textContent =
+            "Переможцем є: " + typeField;
 
           for (let i = 0; i < element.length; i++) {
             fields[element[i]].classList.add("winer");
