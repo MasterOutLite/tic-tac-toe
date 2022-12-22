@@ -27,6 +27,7 @@ body,
 .whose-turn {
   font-size: 30px;
 }
+
 .rest-move {
   font-size: 30px;
 }
@@ -34,6 +35,7 @@ body,
 /*=====================================================================================*/
 
 .body {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, 150px);
   grid-template-rows: repeat(3, 150px);
@@ -41,11 +43,33 @@ body,
   border: 2px solid rgb(32, 135, 131);
 }
 
+.canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+
+  background: rgba(255, 255, 255, 0.093);
+}
+
 .field {
+  position: relative;
   border: 2px solid rgb(32, 135, 131);
 
   padding: 0;
   cursor: pointer;
   font-size: 100px;
   text-transform: uppercase;
+}
+
+.winer {
+  background-color: aqua;
+}
+
+.block.active {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(125, 123, 123, 0.201);
 }

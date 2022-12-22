@@ -61,7 +61,11 @@ function checkWiner() {
         numberMatches++;
         if (numberMatches >= 3) {
           whoseElement.textContent = "Переможцем є: " + typeField;
-          console.log("Переможцем є: " + typeField);
+
+          for (let i = 0; i < element.length; i++) {
+            fields[element[i]].classList.add("winer");
+          }
+          document.querySelector(".block").classList.add("active");
         }
       }
     }
