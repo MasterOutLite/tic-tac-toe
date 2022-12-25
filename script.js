@@ -1,74 +1,188 @@
 "use strict";
 
-let isStepCross = false;
-let score = 9;
-const pointWin = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
+let button = document.querySelector(".block-options__button");
+button.addEventListener("click", () => {
+  let numberField = document.querySelector("#number-field").value;
+  numberField = parseInt(numberField);
+  if (numberField >= 3 && numberField < 101) {
+    document.querySelector(".block-options").classList.remove("active");
 
-const whoseElement = document.querySelector("#whose");
-const scoreElement = document.querySelector("#score");
+    let gameField = document.querySelector(".game-field");
+    gameField.style.grid = `repeat(${numberField},100px) / repeat(${numberField},100px)`;
 
-function printSData() {
-  whoseElement.textContent =
-    "Зараз хід: " + (isStepCross ? "хрестика" : "нолика");
-  scoreElement.textContent = "Залишилося ходів: " + score;
-}
-
-const fields = document.querySelectorAll(".field");
-fields.forEach((element) => {
-  element.addEventListener("click", function () {
-    if (element.getAttribute("data-is-empty").toLowerCase() === "false") {
-      return;
-    }
-
-    if (isStepCross == true) {
-      element.classList.add("cross");
-      element.textContent = "x";
-    } else {
-      element.classList.add("circle");
-      element.textContent = "0";
-    }
-    score--;
-    isStepCross = isStepCross ? false : true;
-    printSData();
-    checkWiner();
-
-    element.setAttribute("data-is-empty", "false");
-  });
+    let game = new TicTacToe(numberField);
+    game.createField();
+  }
 });
 
-printSData();
+class TicTacToe {
+  constructor(numberField) {
+    this.numberField = numberField;
+  }
 
-function checkWiner() {
-  pointWin.forEach((element) => {
-    let numberMatches = 1;
-    const typeField = fields[element[0]].textContent;
+  #numberField = 0;
+  #isCrossStep = true;
+  #listFields;
+  #ALL_WIN = "ALL_WIN";
+  #CURRENT_WIN = "CURRENT_WIN";
 
-    if (typeField === "") {
-      return;
+  createField() {
+    let gameField = document.querySelector(".game-field");
+    console.log(gameField.style.grid);
+
+    for (let i = 0; i < this.numberField * this.numberField; i++) {
+      const field = document.createElement("button");
+      field.classList.add("field");
+      field.addEventListener("click", () => {
+        if (field.textContent != "") return;
+        if (this.isCrossStep == true) {
+          field.textContent = "X";
+        } else {
+          field.textContent = "0";
+        }
+        this.isCrossStep = this.isCrossStep ? false : true;
+
+        this.checkWiner(this.numberField);
+      });
+      gameField.append(field);
     }
 
-    for (let i = 1; i < element.length; i++) {
-      if (fields[element[i]].textContent === typeField) {
-        numberMatches++;
-        if (numberMatches >= 3) {
-          document.querySelector("#textWiner").textContent =
-            "Переможцем є: " + typeField;
+    this.#listFields = document.querySelectorAll(".field");
+  }
 
-          for (let i = 0; i < element.length; i++) {
-            fields[element[i]].classList.add("winer");
+  checkWiner(widthField) {
+    for (let i = 0; i < this.#listFields.length; i++) {
+      let typeField = this.#listFields[i].textContent;
+      if (typeField === "") continue;
+
+      let secondPoint = i + widthField + 1;
+      if (secondPoint > this.#listFields.length - 1 == false) {
+        if (this.#listFields[secondPoint].textContent === typeField) {
+          let thridPoint = secondPoint + widthField + 1;
+          if (thridPoint > this.#listFields.length - 1 == false) {
+            if (this.#listFields[thridPoint].textContent === typeField) {
+              this.#endGame([i, secondPoint, thridPoint], typeField);
+              return;
+            }
           }
-          document.querySelector(".block").classList.add("active");
+        }
+      }
+
+      secondPoint = i + widthField - 1;
+      if (secondPoint > 0 && secondPoint < this.#listFields.length - 1) {
+        if (i != 0) {
+          if (this.#listFields[secondPoint].textContent === typeField) {
+            let thridPoint = secondPoint - 1 + widthField;
+            if (thridPoint > 0 && thridPoint < this.#listFields.length - 1) {
+              if (this.#listFields[thridPoint].textContent === typeField) {
+                this.#endGame([i, secondPoint, thridPoint], typeField);
+                return;
+              }
+            }
+          }
+        }
+      }
+
+      secondPoint = i + 1;
+      if (secondPoint > this.#listFields.length - 1 == false) {
+        if (this.#listFields[secondPoint].textContent === typeField) {
+          let thridPoint = secondPoint + 1;
+          if (thridPoint > this.#listFields.length - 1 == false) {
+            if (this.#listFields[thridPoint].textContent === typeField) {
+              let isWiner = true;
+              for (let i = 1; i <= widthField; i++) {
+                if (
+                  (thridPoint === widthField * i) |
+                  (secondPoint === widthField * i)
+                ) {
+                  isWiner = false;
+                  break;
+                }
+              }
+
+              if (isWiner == true) {
+                this.#endGame([i, secondPoint, thridPoint], typeField);
+                return;
+              }
+            }
+          }
+        }
+      }
+
+      secondPoint = i + widthField;
+      if (secondPoint > this.#listFields.length - 1) continue;
+      if (this.#listFields[secondPoint].textContent === typeField) {
+        let thridPoint = secondPoint + widthField;
+        if (thridPoint > this.#listFields.length - 1) continue;
+        if (this.#listFields[thridPoint].textContent === typeField) {
+          this.#endGame([i, secondPoint, thridPoint], typeField);
+          return;
         }
       }
     }
-  });
+  }
+
+  #endGame(arrIndexField, winer) {
+    arrIndexField.forEach((element) => {
+      this.#listFields[element].classList.add("winner");
+    });
+    document.querySelector(".block-end-game").classList.add("active");
+
+    let text = document.querySelector("#end-game__out");
+    text.textContent = "Переможцем є: " + winer;
+
+    let wins = this.#getWins();
+
+    if (winer.toLowerCase() === "x") {
+      wins.allWins.cross++;
+      wins.currentWins.cross++;
+    } else {
+      wins.allWins.zero++;
+      wins.currentWins.zero++;
+    }
+
+    document.querySelector("#all-win").textContent =
+      "Всього перемог: x = " +
+      wins.allWins.cross +
+      ". 0 = " +
+      wins.allWins.zero;
+    document.querySelector("#current-win").textContent =
+      "Всього перемог в сеансі: х = " +
+      wins.currentWins.cross +
+      ". 0 = " +
+      wins.currentWins.zero;
+
+    console.log(wins);
+    this.#setWins(wins);
+  }
+
+  #getWins() {
+    let allWins = JSON.parse(localStorage.getItem(this.#ALL_WIN));
+    let currentWins = JSON.parse(sessionStorage.getItem(this.#CURRENT_WIN));
+
+    console.log(allWins);
+    console.log(currentWins);
+
+    if (
+      currentWins === null ||
+      currentWins === undefined ||
+      currentWins == "undefined"
+    ) {
+      currentWins = { cross: 0, zero: 0 };
+    }
+
+    if (allWins == null || allWins == undefined || allWins == "undefined") {
+      allWins = { cross: 0, zero: 0 };
+    }
+
+    return { currentWins, allWins };
+  }
+
+  #setWins(wins) {
+    let allWins = JSON.stringify(wins.allWins);
+    let currentWins = JSON.stringify(wins.currentWins);
+
+    localStorage.setItem(this.#ALL_WIN, allWins);
+    sessionStorage.setItem(this.#CURRENT_WIN, currentWins);
+  }
 }

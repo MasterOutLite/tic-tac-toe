@@ -12,28 +12,30 @@
   </head>
   <body>
     <div class="wrapper">
-      <section class="scoreBoard">
-        <span id="whose" class="whose-turn scoreBoard__item"></span>
-        <span id="score" class="rest-move scoreBoard__item"></span>
+      <section class="block-options active">
+        <label class="label" for="block-options__input"
+          >Введіть розмірність ігрового поля</label
+        >
+        <input
+          type="number"
+          name=""
+          value="3"
+          min="3"
+          max="100"
+          id="number-field"
+          class="block-options__input"
+        />
+        <button class="block-options__button">Підтвердити</button>
       </section>
 
-      <section class="body">
-        <button id="f1" data-is-empty="true" class="field"></button>
-        <button id="f2" data-is-empty="true" class="field"></button>
-        <button id="f3" data-is-empty="true" class="field"></button>
-        <button id="f4" data-is-empty="true" class="field"></button>
-        <button id="f5" data-is-empty="true" class="field"></button>
-        <button id="f6" data-is-empty="true" class="field"></button>
-        <button id="f7" data-is-empty="true" class="field"></button>
-        <button id="f8" data-is-empty="true" class="field"></button>
-        <button id="f9" data-is-empty="true" class="field"></button>
-      </section>
+      <section id="game-field" class="game-field"></section>
 
-      <div class="block">
-        <span id="textWiner" class="textWiner"></span>
-      </div>
+      <section class="block-end-game">
+        <span id="all-win" class="text-win"></span>
+        <span id="current-win" class="text-win"></span>
+        <span id="end-game__out" class="end-game__out"></span>
+      </section>
     </div>
-
     <script src="script.js"></script>
   </body>
 </html>
