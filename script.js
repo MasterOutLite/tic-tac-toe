@@ -20,7 +20,6 @@ class TicTacToe {
     this.numberField = numberField;
   }
 
-  #numberField = 0;
   #isCrossStep = true;
   #listFields;
   #ALL_WIN = "ALL_WIN";
@@ -28,19 +27,18 @@ class TicTacToe {
 
   createField() {
     let gameField = document.querySelector(".game-field");
-    console.log(gameField.style.grid);
 
     for (let i = 0; i < this.numberField * this.numberField; i++) {
       const field = document.createElement("button");
       field.classList.add("field");
       field.addEventListener("click", () => {
         if (field.textContent != "") return;
-        if (this.isCrossStep == true) {
+        if (this.#isCrossStep == true) {
           field.textContent = "X";
         } else {
           field.textContent = "0";
         }
-        this.isCrossStep = this.isCrossStep ? false : true;
+        this.#isCrossStep = this.#isCrossStep ? false : true;
 
         this.checkWiner(this.numberField);
       });
@@ -152,16 +150,12 @@ class TicTacToe {
       ". 0 = " +
       wins.currentWins.zero;
 
-    console.log(wins);
     this.#setWins(wins);
   }
 
   #getWins() {
     let allWins = JSON.parse(localStorage.getItem(this.#ALL_WIN));
     let currentWins = JSON.parse(sessionStorage.getItem(this.#CURRENT_WIN));
-
-    console.log(allWins);
-    console.log(currentWins);
 
     if (
       currentWins === null ||
