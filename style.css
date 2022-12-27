@@ -38,7 +38,7 @@
 }
 
 .label {
-  font-size: 26px;
+  font-size: 30px;
 }
 
 .block-options__input {
@@ -47,6 +47,8 @@
 }
 
 .block-options__button {
+  padding: 8px 15px;
+
   border-radius: 12px;
   font-size: 26px;
 
