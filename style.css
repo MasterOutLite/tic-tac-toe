@@ -1,6 +1,6 @@
-html,
-body {
-  height: 100%;
+.full-screan {
+  height: 100vh;
+  width: 100vw;
 }
 
 .wrapper {
@@ -11,10 +11,11 @@ body {
   justify-content: center;
 
   min-height: 100%;
+  min-width: 100%;
 
-  box-sizing: border-box;
   padding: 0 15px;
 }
+
 /*======================*/
 .block-options {
   display: none;
@@ -65,11 +66,13 @@ body {
 }
 
 .field {
+  text-transform: uppercase;
   text-align: center;
   font-size: 100px;
   border: 1px solid aquamarine;
 
   cursor: pointer;
+  user-select: none;
 }
 
 .winner {
@@ -80,6 +83,7 @@ body {
 .block-end-game {
   display: none;
 }
+
 .block-end-game.active {
   position: absolute;
   z-index: 10;
@@ -94,9 +98,20 @@ body {
 
   background-color: rgba(240, 248, 255, 0.6);
 }
+
+.block-end-game__contant {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 15px;
+  border-radius: 15px;
+  background-color: aquamarine;
+}
+
 .end-game__out {
   font-size: 100px;
-
   user-select: none;
 }
 

@@ -1,41 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="style.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Tic Tac Toe</title>
-  </head>
-  <body>
-    <div class="wrapper">
-      <section class="block-options active">
-        <label class="label" for="block-options__input"
-          >Введіть розмірність ігрового поля</label
-        >
-        <input
-          type="number"
-          name=""
-          value="3"
-          min="3"
-          max="100"
-          id="number-field"
-          class="block-options__input"
-        />
-        <button class="block-options__button">Підтвердити</button>
-      </section>
+  <link rel="stylesheet" href="reset.css" />
+  <link rel="stylesheet" href="style.css" />
 
-      <section id="game-field" class="game-field"></section>
+  <title>Tic Tac Toe</title>
+</head>
 
-      <section class="block-end-game">
+<body class="full-screan">
+  <main class="wrapper">
+    <section class="block-options active">
+      <label class="label" for="block-options__input">Введіть розмірність ігрового поля</label>
+      <input type="number" name="" value="3" min="3" max="100" id="number-field" class="block-options__input" />
+      <button class="block-options__button">Підтвердити</button>
+    </section>
+
+    <section id="game-field" class="game-field"></section>
+
+    <section class="block-end-game">
+      <div class="block-end-game__contant">
         <span id="all-win" class="text-win"></span>
         <span id="current-win" class="text-win"></span>
         <span id="end-game__out" class="end-game__out"></span>
-      </section>
-    </div>
-    <script src="script.js"></script>
-  </body>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+
 </html>
