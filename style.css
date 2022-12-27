@@ -16,7 +16,7 @@
   padding: 0 15px;
 }
 
-/*======================*/
+/*  block options  */
 .block-options {
   display: none;
 }
@@ -55,7 +55,7 @@
   cursor: pointer;
 }
 
-/*==========================================*/
+/*  game field  */
 
 .game-field {
   display: grid;
@@ -81,7 +81,7 @@
   background-color: red;
 }
 
-/*======================*/
+/*  block end game  */
 .block-end-game {
   display: none;
 }
