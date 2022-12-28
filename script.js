@@ -19,34 +19,26 @@ button.addEventListener("click", () => {
 class TicTacToe {
   constructor(numberField) {
     this.numberField = numberField;
+    this.tool = new ManagerTool();
+    this.player = new Player();
   }
 
-  #cross = "x";
-  #zero = "0";
-  #isCrossStep = true;
   #listFields;
+  player;
+  tool;
 
   createField() {
-    let gameField = document.querySelector(".game-field");
-
     for (let i = 0; i < this.numberField * this.numberField; i++) {
       const field = document.createElement("button");
       field.classList.add("field");
 
       field.addEventListener("click", () => {
-        if (field.textContent != "") return;
-
-        if (this.#isCrossStep == true) {
-          field.textContent = this.#cross;
-        } else {
-          field.textContent = this.#zero;
-        }
-        this.#isCrossStep = !this.#isCrossStep;
+        this.player.changeSide(field);
 
         this.checkWiner(this.numberField);
       });
 
-      gameField.append(field);
+      this.tool.gameField.append(field);
     }
 
     this.#listFields = document.querySelectorAll(".field");
@@ -58,9 +50,15 @@ class TicTacToe {
       if (typeField === "") continue;
 
       let secondPoint = i + widthField + 1;
-      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
+      if (
+        this.#checkLimit(secondPoint) &&
+        this.#listFields[secondPoint].textContent === typeField
+      ) {
         let thridPoint = secondPoint + widthField + 1;
-        if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
+        if (
+          this.#checkLimit(thridPoint) &&
+          this.#listFields[thridPoint].textContent === typeField
+        ) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
 
           return;
@@ -68,10 +66,16 @@ class TicTacToe {
       }
 
       secondPoint = i + widthField - 1;
-      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
+      if (
+        this.#checkLimit(secondPoint) &&
+        this.#listFields[secondPoint].textContent === typeField
+      ) {
         if (i != 0) {
           let thridPoint = secondPoint - 1 + widthField;
-          if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
+          if (
+            this.#checkLimit(thridPoint) &&
+            this.#listFields[thridPoint].textContent === typeField
+          ) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
 
             return;
@@ -80,9 +84,15 @@ class TicTacToe {
       }
 
       secondPoint = i + 1;
-      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
+      if (
+        this.#checkLimit(secondPoint) &&
+        this.#listFields[secondPoint].textContent === typeField
+      ) {
         let thridPoint = secondPoint + 1;
-        if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
+        if (
+          this.#checkLimit(thridPoint) &&
+          this.#listFields[thridPoint].textContent === typeField
+        ) {
           if (this.#checkSideField(widthField, secondPoint, thridPoint)) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
 
@@ -92,9 +102,15 @@ class TicTacToe {
       }
 
       secondPoint = i + widthField;
-      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
+      if (
+        this.#checkLimit(secondPoint) &&
+        this.#listFields[secondPoint].textContent === typeField
+      ) {
         let thridPoint = secondPoint + widthField;
-        if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
+        if (
+          this.#checkLimit(thridPoint) &&
+          this.#listFields[thridPoint].textContent === typeField
+        ) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
 
           return;
@@ -121,15 +137,14 @@ class TicTacToe {
       this.#listFields[element].classList.add("winner");
     });
 
-    document.querySelector(".block-end-game").classList.add("active");
+    this.tool.blockEndGame.classList.add("active");
 
-    let text = document.querySelector("#end-game__out");
-    text.textContent = "Переможцем є: " + winer;
+    this.tool.fieldWinner.textContent = "Переможцем є: " + winer;
 
     const gameSave = new GameSave();
     let wins = gameSave.getWins();
 
-    if (winer.toLowerCase() === "x") {
+    if (winer.toLowerCase() === this.player.cross()) {
       wins.allWins.cross++;
       wins.currentWins.cross++;
     } else {
@@ -137,18 +152,46 @@ class TicTacToe {
       wins.currentWins.zero++;
     }
 
-    document.querySelector("#all-win").textContent =
-      `Всього перемог: x = ${wins.allWins.cross}. 0 = ${wins.allWins.zero}.`;
+    this.tool.fieldAllWin.textContent = `Всього перемог: x = ${wins.allWins.cross}. 0 = ${wins.allWins.zero}.`;
 
-    document.querySelector("#current-win").textContent =
-      `Всього перемог в сеансі: х = ${wins.currentWins.cross}. 0 = ${wins.currentWins.zero}.`;
+    this.tool.fieldCurrentWin.textContent = `Всього перемог в сеансі: х = ${wins.currentWins.cross}. 0 = ${wins.currentWins.zero}.`;
 
     gameSave.setWins(wins);
   }
 }
 
-class GameSave {
+class Player {
+  #isCrossStep = true;
+  #_cross = "x";
+  #_zero = "0";
 
+  cross = () => {
+    return this.#_cross;
+  };
+
+  changeSide(field) {
+    if (field.textContent != "") return;
+
+    if (this.#isCrossStep == true) {
+      field.textContent = this.#_cross;
+    } else {
+      field.textContent = this.#_zero;
+    }
+
+    this.#isCrossStep = !this.#isCrossStep;
+  }
+}
+
+class ManagerTool {
+  fieldAllWin = document.querySelector("#all-win");
+  fieldCurrentWin = document.querySelector("#current-win");
+  fieldWinner = document.querySelector("#end-game__out");
+
+  blockEndGame = document.querySelector(".block-end-game");
+  gameField = document.querySelector(".game-field");
+}
+
+class GameSave {
   #ALL_WIN_KEY = "ALL_WIN";
   #CURRENT_WIN_KEY = "CURRENT_WIN";
 
