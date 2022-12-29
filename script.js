@@ -1,64 +1,161 @@
 "use strict";
 
-let button = document.querySelector(".block-options__button");
-button.addEventListener("click", () => {
-  let numberField = document.querySelector("#number-field").value;
-  numberField = parseInt(numberField);
+class Player {
+  #_type;
 
-  if (numberField >= 3 && numberField <= 100) {
-    document.querySelector(".block-options").classList.remove("active");
-
-    let gameField = document.querySelector(".game-field");
-    gameField.style.grid = `repeat(${numberField},100px) / repeat(${numberField},100px)`;
-
-    let game = new TicTacToe(numberField);
-    game.createField();
+  get type() {
+    return this.#_type;
   }
-});
+
+  constructor(type) {
+    this.#_type = type;
+  }
+}
+
+class GameSaves {
+  #_allWinKey = "ALL_WIN";
+  #_currentWinKey = "CURRENT_WIN";
+
+  getWins() {
+    let allWins = JSON.parse(localStorage.getItem(this.#_allWinKey));
+    let currentWins = JSON.parse(sessionStorage.getItem(this.#_currentWinKey));
+
+    if (!currentWins) {
+      currentWins = { playerOne: 0, playerTwo: 0 };
+    }
+
+    if (!allWins) {
+      allWins = { playerOne: 0, playerTwo: 0 };
+    }
+
+    return { currentWins, allWins };
+  }
+
+  addWins(winer, player) {
+    const wins = this.getWins();
+
+    console.log(winer);
+    console.log(player);
+    console.log(wins);
+
+    if (winer.toLowerCase() === player.type.toLowerCase()) {
+      wins.allWins.playerOne++;
+      wins.currentWins.playerOne++;
+    } else {
+      wins.allWins.playerTwo++;
+      wins.currentWins.playerTwo++;
+    }
+
+    this.setWins(wins);
+    return wins;
+  }
+
+  setWins(wins) {
+    let allWins = JSON.stringify(wins.allWins);
+    let currentWins = JSON.stringify(wins.currentWins);
+
+    localStorage.setItem(this.#_allWinKey, allWins);
+    sessionStorage.setItem(this.#_currentWinKey, currentWins);
+  }
+}
+
+class Property {
+  get fieldAllWin() {
+    return document.querySelector("#all-win");
+  }
+
+  get fieldCurrentWin() {
+    return document.querySelector("#current-win");
+  }
+
+  get fieldWinner() {
+    return document.querySelector("#end-game__out");
+  }
+
+  get blockEndGame() {
+    return document.querySelector(".block-end-game");
+  }
+
+  get blockOptions() {
+    return document.querySelector(".block-options");
+  }
+
+  get gameField() {
+    return document.querySelector(".game-field");
+  }
+
+  get buttonOptions() {
+    return document.querySelector(".block-options__button");
+  }
+
+  get numberField() {
+    return document.querySelector("#number-field");
+  }
+}
 
 class TicTacToe {
-  constructor(numberField) {
-    this.numberField = numberField;
-    this.tool = new ManagerTool();
-    this.player = new Player();
+  #_isFirstStepPlayer = true;
+  #listFields;
+
+  #_playerOne;
+  #_playerTwo;
+
+  #_property;
+  #_numberField;
+
+  get playerOne() {
+    return this.#_playerOne;
   }
 
-  #listFields;
-  player;
-  tool;
+  get playerTwo() {
+    return this.#_playerTwo;
+  }
 
-  createField() {
-    for (let i = 0; i < this.numberField * this.numberField; i++) {
+  constructor(numberField, property) {
+    this.#_numberField = numberField;
+    this.#_property = property;
+
+    this.#_playerOne = new Player("X");
+    this.#_playerTwo = new Player("0");
+  }
+
+  start() {
+    this.#_property.gameField.style.grid = `repeat(${this.#_numberField}, 1fr) / repeat(${this.#_numberField}, 1fr)`;
+    this.#createGameField(this.#_numberField);
+  }
+
+  changeSide(target) {
+    if (target.textContent != "") return;
+
+    if (this.#_isFirstStepPlayer == true) {
+      target.textContent = this.playerOne.type;
+    } else {
+      target.textContent = this.playerTwo.type;
+    }
+
+    this.#_isFirstStepPlayer = !this.#_isFirstStepPlayer;
+    this.#checkWiner(this.#_numberField);
+  }
+
+  #createGameField(numberField) {
+    for (let i = 0; i < numberField * numberField; i++) {
       const field = document.createElement("button");
       field.classList.add("field");
-
-      field.addEventListener("click", () => {
-        this.player.changeSide(field);
-
-        this.checkWiner(this.numberField);
-      });
-
-      this.tool.gameField.append(field);
+      this.#_property.gameField.append(field);
     }
 
     this.#listFields = document.querySelectorAll(".field");
   }
 
-  checkWiner(widthField) {
+  #checkWiner(widthField) {
     for (let i = 0; i < this.#listFields.length; i++) {
       let typeField = this.#listFields[i].textContent;
       if (typeField === "") continue;
 
       let secondPoint = i + widthField + 1;
-      if (
-        this.#checkLimit(secondPoint) &&
-        this.#listFields[secondPoint].textContent === typeField
-      ) {
+      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
         let thridPoint = secondPoint + widthField + 1;
-        if (
-          this.#checkLimit(thridPoint) &&
-          this.#listFields[thridPoint].textContent === typeField
-        ) {
+        if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
 
           return;
@@ -66,16 +163,10 @@ class TicTacToe {
       }
 
       secondPoint = i + widthField - 1;
-      if (
-        this.#checkLimit(secondPoint) &&
-        this.#listFields[secondPoint].textContent === typeField
-      ) {
+      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
         if (i != 0) {
           let thridPoint = secondPoint - 1 + widthField;
-          if (
-            this.#checkLimit(thridPoint) &&
-            this.#listFields[thridPoint].textContent === typeField
-          ) {
+          if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
 
             return;
@@ -84,16 +175,10 @@ class TicTacToe {
       }
 
       secondPoint = i + 1;
-      if (
-        this.#checkLimit(secondPoint) &&
-        this.#listFields[secondPoint].textContent === typeField
-      ) {
+      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
         let thridPoint = secondPoint + 1;
-        if (
-          this.#checkLimit(thridPoint) &&
-          this.#listFields[thridPoint].textContent === typeField
-        ) {
-          if (this.#checkSideField(widthField, secondPoint, thridPoint)) {
+        if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
+          if (this.#checkSideLimit(widthField, secondPoint, thridPoint)) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
 
             return;
@@ -102,15 +187,9 @@ class TicTacToe {
       }
 
       secondPoint = i + widthField;
-      if (
-        this.#checkLimit(secondPoint) &&
-        this.#listFields[secondPoint].textContent === typeField
-      ) {
+      if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
         let thridPoint = secondPoint + widthField;
-        if (
-          this.#checkLimit(thridPoint) &&
-          this.#listFields[thridPoint].textContent === typeField
-        ) {
+        if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
 
           return;
@@ -123,7 +202,7 @@ class TicTacToe {
     return value >= 0 && value < this.#listFields.length - 1;
   }
 
-  #checkSideField(widthField, secondPoint, thridPoint) {
+  #checkSideLimit(widthField, secondPoint, thridPoint) {
     for (let i = 1; i <= widthField; i++) {
       if (thridPoint === widthField * i || secondPoint === widthField * i) {
         return false;
@@ -137,84 +216,35 @@ class TicTacToe {
       this.#listFields[element].classList.add("winner");
     });
 
-    this.tool.blockEndGame.classList.add("active");
+    this.#_property.blockEndGame.classList.add("active");
 
-    this.tool.fieldWinner.textContent = "Переможцем є: " + winer;
+    this.#_property.fieldWinner.textContent = "Переможцем є: " + winer;
 
-    const gameSave = new GameSave();
-    let wins = gameSave.getWins();
+    const gameSave = new GameSaves();
+    const wins = gameSave.addWins(winer, this.#_playerOne);
 
-    if (winer.toLowerCase() === this.player.cross()) {
-      wins.allWins.cross++;
-      wins.currentWins.cross++;
-    } else {
-      wins.allWins.zero++;
-      wins.currentWins.zero++;
-    }
-
-    this.tool.fieldAllWin.textContent = `Всього перемог: x = ${wins.allWins.cross}. 0 = ${wins.allWins.zero}.`;
-
-    this.tool.fieldCurrentWin.textContent = `Всього перемог в сеансі: х = ${wins.currentWins.cross}. 0 = ${wins.currentWins.zero}.`;
-
-    gameSave.setWins(wins);
+    this.#_property.fieldAllWin.textContent = `Всього перемог: x = ${wins.allWins.playerOne}. 0 = ${wins.allWins.playerTwo}.`;
+    this.#_property.fieldCurrentWin.textContent = `Всього перемог в сеансі: х = ${wins.currentWins.playerOne}. 0 = ${wins.currentWins.playerTwo}.`;
   }
 }
 
-class Player {
-  #isCrossStep = true;
-  #_cross = "x";
-  #_zero = "0";
+const property = new Property();
 
-  cross = () => {
-    return this.#_cross;
-  };
+const button = property.buttonOptions;
+button.addEventListener("click", () => {
+  let numberField = document.querySelector("#number-field").value;
+  numberField = parseInt(numberField);
 
-  changeSide(field) {
-    if (field.textContent != "") return;
+  if (numberField >= 3 && numberField <= 100) {
+    property.blockOptions.classList.remove("active");
 
-    if (this.#isCrossStep == true) {
-      field.textContent = this.#_cross;
-    } else {
-      field.textContent = this.#_zero;
-    }
+    const game = new TicTacToe(numberField, property);
+    game.start();
 
-    this.#isCrossStep = !this.#isCrossStep;
+    property.gameField.addEventListener("click", function (event) {
+      if (event.target.closest(".field")) {
+        game.changeSide(event.target);
+      }
+    });
   }
-}
-
-class ManagerTool {
-  fieldAllWin = document.querySelector("#all-win");
-  fieldCurrentWin = document.querySelector("#current-win");
-  fieldWinner = document.querySelector("#end-game__out");
-
-  blockEndGame = document.querySelector(".block-end-game");
-  gameField = document.querySelector(".game-field");
-}
-
-class GameSave {
-  #ALL_WIN_KEY = "ALL_WIN";
-  #CURRENT_WIN_KEY = "CURRENT_WIN";
-
-  getWins() {
-    let allWins = JSON.parse(localStorage.getItem(this.#ALL_WIN_KEY));
-    let currentWins = JSON.parse(sessionStorage.getItem(this.#CURRENT_WIN_KEY));
-
-    if (!currentWins) {
-      currentWins = { cross: 0, zero: 0 };
-    }
-
-    if (!allWins) {
-      allWins = { cross: 0, zero: 0 };
-    }
-
-    return { currentWins, allWins };
-  }
-
-  setWins(wins) {
-    let allWins = JSON.stringify(wins.allWins);
-    let currentWins = JSON.stringify(wins.currentWins);
-
-    localStorage.setItem(this.#ALL_WIN_KEY, allWins);
-    sessionStorage.setItem(this.#CURRENT_WIN_KEY, currentWins);
-  }
-}
+});
