@@ -34,10 +34,6 @@ class GameSaves {
   addWins(winer, player) {
     const wins = this.getWins();
 
-    console.log(winer);
-    console.log(player);
-    console.log(wins);
-
     if (winer.toLowerCase() === player.type.toLowerCase()) {
       wins.allWins.playerOne++;
       wins.currentWins.playerOne++;
@@ -157,7 +153,6 @@ class TicTacToe {
         let thridPoint = secondPoint + widthField + 1;
         if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
-
           return;
         }
       }
@@ -168,7 +163,6 @@ class TicTacToe {
           let thridPoint = secondPoint - 1 + widthField;
           if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
-
             return;
           }
         }
@@ -180,7 +174,6 @@ class TicTacToe {
         if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
           if (this.#checkSideLimit(widthField, secondPoint, thridPoint)) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
-
             return;
           }
         }
@@ -191,7 +184,6 @@ class TicTacToe {
         let thridPoint = secondPoint + widthField;
         if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
-
           return;
         }
       }
