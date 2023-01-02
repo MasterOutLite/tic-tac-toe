@@ -76,6 +76,10 @@ class Property {
     return document.querySelector(".block-options");
   }
 
+  get wrapper() {
+    return document.querySelector(".wrapper");
+  }
+
   get gameField() {
     return document.querySelector(".game-field");
   }
@@ -225,7 +229,7 @@ class TicTacToe {
     });
 
     this.#_property.blockEndGame.classList.add("active");
-
+    this.#_property.wrapper.classList.add("block");
     this.#_property.fieldWinner.textContent = "Переможцем є: " + winer;
 
     const gameSave = new GameSaves();
