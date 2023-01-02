@@ -199,10 +199,10 @@ class TicTacToe {
     return value >= 0 && value <= this.#listFields.length - 1;
   }
 
-  #checkSideLimit(secondPoint, thridPoint) {
+  #checkSideLimit(first, second) {
     for (let i = 1; i <= this.#_numberField; i++) {
       const step = this.#_numberField * i;
-      if (thridPoint === step || secondPoint === step) {
+      if (first === step || second === step) {
         return false;
       }
     }
