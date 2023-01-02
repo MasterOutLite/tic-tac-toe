@@ -153,16 +153,19 @@ class TicTacToe {
         let thridPoint = secondPoint + widthField + 1;
         if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
+          console.log("win1");
           return;
         }
       }
 
       secondPoint = i + widthField - 1;
       if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
-        if (i != 0) {
-          let thridPoint = secondPoint - 1 + widthField;
+        if (i != 0 && this.#checkLimitStart(i)) {
+          let thridPoint = secondPoint + widthField - 1;
           if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
+            console.log("win2");
+            console.log(i, secondPoint, thridPoint);
             return;
           }
         }
@@ -172,8 +175,9 @@ class TicTacToe {
       if (this.#checkLimit(secondPoint) && this.#listFields[secondPoint].textContent === typeField) {
         let thridPoint = secondPoint + 1;
         if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
-          if (this.#checkSideLimit(widthField, secondPoint, thridPoint)) {
+          if (this.#checkSideLimit(secondPoint, thridPoint)) {
             this.#endGame([i, secondPoint, thridPoint], typeField);
+            console.log("win3");
             return;
           }
         }
@@ -184,6 +188,7 @@ class TicTacToe {
         let thridPoint = secondPoint + widthField;
         if (this.#checkLimit(thridPoint) && this.#listFields[thridPoint].textContent === typeField) {
           this.#endGame([i, secondPoint, thridPoint], typeField);
+          console.log("win4");
           return;
         }
       }
@@ -191,15 +196,26 @@ class TicTacToe {
   }
 
   #checkLimit(value) {
-    return value >= 0 && value < this.#listFields.length - 1;
+    return value >= 0 && value <= this.#listFields.length - 1;
   }
 
-  #checkSideLimit(widthField, secondPoint, thridPoint) {
-    for (let i = 1; i <= widthField; i++) {
-      if (thridPoint === widthField * i || secondPoint === widthField * i) {
+  #checkSideLimit(secondPoint, thridPoint) {
+    for (let i = 1; i <= this.#_numberField; i++) {
+      const step = this.#_numberField * i;
+      if (thridPoint === step || secondPoint === step) {
         return false;
       }
     }
+    return true;
+  }
+
+  #checkLimitStart(value) {
+    for (let i = 0; i < this.#listFields.length; i += this.#_numberField) {
+      if (value == i) {
+        return false;
+      }
+    }
+
     return true;
   }
 

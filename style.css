@@ -1,6 +1,6 @@
 .full-screan {
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 }
 
 .wrapper {
@@ -11,8 +11,8 @@
   justify-content: center;
 
   box-sizing: border-box;
-  min-height: 100%;
-  min-width: 100%;
+  height: 100%;
+  width: 100%;
 
   padding: 0 15px;
 }
@@ -24,6 +24,8 @@
 
 .block-options.active {
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 10;
 
   display: flex;
@@ -32,10 +34,26 @@
   align-items: center;
   gap: 20px;
 
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
+  padding: 15px;
 
   background-color: rgba(245, 245, 220, 0.7);
+}
+
+.block-options__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  box-sizing: border-box;
+  padding: 15px;
+
+  border-radius: 15px;
+  background-color: rgba(226, 148, 23, 0.7);
 }
 
 .label {
@@ -60,8 +78,8 @@
 
 .game-field {
   display: grid;
-  grid-template-columns: repeat(3, 150px);
-  grid-template-rows: repeat(3, 150px);
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
 
   background-color: antiquewhite;
   align-self: center;
@@ -89,6 +107,8 @@
 
 .block-end-game.active {
   position: absolute;
+  top: 0px;
+  left: 0px;
   z-index: 10;
 
   display: flex;
@@ -96,8 +116,10 @@
   justify-content: center;
   align-items: center;
 
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
+  padding: 15px;
 
   background-color: rgba(240, 248, 255, 0.6);
 }
@@ -108,17 +130,40 @@
   justify-content: center;
   align-items: center;
 
+  box-sizing: border-box;
+  width: 100%;
+
   padding: 15px;
   border-radius: 15px;
   background-color: aquamarine;
 }
 
 .end-game__out {
-  font-size: 100px;
+  font-size: 90px;
   user-select: none;
 }
 
 .text-win {
   font-size: 50px;
   user-select: none;
+}
+
+@media (max-width: 990px) {
+  .field {
+    font-size: 80px;
+  }
+}
+
+@media (max-width: 570px) {
+  .field {
+    font-size: 60px;
+  }
+
+  .end-game__out {
+    font-size: 60px;
+  }
+
+  .text-win {
+    font-size: 30px;
+  }
 }

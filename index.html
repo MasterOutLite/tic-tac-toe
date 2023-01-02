@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="full-screan">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,9 +14,11 @@
   <body class="full-screan">
     <main class="wrapper">
       <section class="block-options active">
-        <label class="label" for="block-options__input">Введіть розмірність ігрового поля</label>
-        <input type="number" name="" value="3" min="3" max="100" id="number-field" class="block-options__input" />
-        <button class="block-options__button">Підтвердити</button>
+        <div class="block-options__container">
+          <label class="label" for="block-options__input">Введіть розмірність ігрового поля</label>
+          <input type="number" name="" value="3" min="3" max="100" id="number-field" class="block-options__input" />
+          <button class="block-options__button">Підтвердити</button>
+        </div>
       </section>
 
       <section id="game-field" class="game-field"></section>
