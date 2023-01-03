@@ -161,7 +161,7 @@ class TicTacToe {
 	changeFontSize() {
 		const bound = document.querySelector(".field").getBoundingClientRect();
 		const size = Math.min(bound.height, bound.width);
-		const fontSize = size - (size * 0.2);
+		const fontSize = Math.floor(size - (size * 0.2));
 		this.#_property.gameField.style.fontSize = fontSize + "px";
 	}
 
