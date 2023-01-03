@@ -156,6 +156,13 @@ class TicTacToe {
 
 		this.#listFields = document.querySelectorAll(".field");
 		this.changeFontSize();
+		this.changeSizeField();
+	}
+
+	changeSizeField() {
+		const bound = document.querySelector(".field").getBoundingClientRect();
+		const size = Math.min(bound.height, bound.width);
+		this.#_property.gameField.style.grid = `repeat(${this.#_numberField}, ${size}px) / repeat(${this.#_numberField}, ${size}px)`;
 	}
 
 	changeFontSize() {
@@ -279,6 +286,7 @@ button.addEventListener("click", () => {
 
 		window.addEventListener("resize", () => {
 			game.changeFontSize();
+			game.changeSizeField();
 		});
 	}
 });
