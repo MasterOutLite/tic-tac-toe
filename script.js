@@ -55,7 +55,7 @@ class GameSaves {
   }
 }
 
-class Property {
+class FieldsData {
   get fieldAllWin() {
     return document.querySelector("#all-win");
   }
@@ -87,14 +87,6 @@ class Property {
   get buttonOptions() {
     return document.querySelector(".block-options__button");
   }
-
-  get numberField() {
-    return document.querySelector("#number-field");
-  }
-
-  get numberFieldsToWin() {
-    return document.querySelector("#number-field-to-win");
-  }
 }
 
 class TicTacToe {
@@ -104,7 +96,7 @@ class TicTacToe {
   #_playerOne;
   #_playerTwo;
 
-  #_property;
+  #_fieldsData;
   #_numberField;
   #_counterSteps = 0;
   #_numberFieldsToWin = 3;
@@ -127,7 +119,7 @@ class TicTacToe {
 
   constructor(numberField, property, numberFieldsToWin) {
     this.#_numberField = numberField;
-    this.#_property = property;
+    this.#_fieldsData = property;
 
     if (numberFieldsToWin >= 3) {
       this.#_numberFieldsToWin = numberFieldsToWin;
@@ -138,7 +130,7 @@ class TicTacToe {
   }
 
   start() {
-    this.#_property.gameField.style.grid = `repeat(${this.#_numberField}, 1fr) / repeat(${this.#_numberField}, 1fr)`;
+    this.#_fieldsData.gameField.style.grid = `repeat(${this.#_numberField}, 1fr) / repeat(${this.#_numberField}, 1fr)`;
     this.#createGameField(this.#_numberField);
   }
 
@@ -155,8 +147,8 @@ class TicTacToe {
     this.#checkWiner(this.#_numberField);
     this.#_counterSteps++;
     if (this.#_counterSteps >= this.counterFields) {
-      this.#_property.blockEndGame.classList.add("active");
-      this.#_property.fieldWinner.textContent = "Winer is none";
+      this.#_fieldsData.blockEndGame.classList.add("active");
+      this.#_fieldsData.fieldWinner.textContent = "Winer is none";
     }
   }
 
@@ -164,7 +156,7 @@ class TicTacToe {
     for (let i = 0; i < numberField * numberField; i++) {
       const field = document.createElement("div");
       field.classList.add("field");
-      this.#_property.gameField.append(field);
+      this.#_fieldsData.gameField.append(field);
     }
 
     this.#listFields = document.querySelectorAll(".field");
@@ -175,14 +167,14 @@ class TicTacToe {
   changeSizeField() {
     const bound = document.querySelector(".field").getBoundingClientRect();
     const size = Math.min(bound.height, bound.width);
-    this.#_property.gameField.style.grid = `repeat(${this.#_numberField}, ${size}px) / repeat(${this.#_numberField}, ${size}px)`;
+    this.#_fieldsData.gameField.style.grid = `repeat(${this.#_numberField}, ${size}px) / repeat(${this.#_numberField}, ${size}px)`;
   }
 
   changeFontSize() {
     const bound = document.querySelector(".field").getBoundingClientRect();
     const size = Math.min(bound.height, bound.width);
     const fontSize = Math.floor(size - size * 0.2);
-    this.#_property.gameField.style.fontSize = fontSize + "px";
+    this.#_fieldsData.gameField.style.fontSize = fontSize + "px";
   }
 
   #checkWiner(widthField) {
@@ -312,21 +304,21 @@ class TicTacToe {
       this.#listFields[step].classList.add("winner");
     }
 
-    this.#_property.blockEndGame.classList.add("active");
-    this.#_property.wrapper.classList.add("block");
-    this.#_property.fieldWinner.textContent = "Переможцем є: " + winer;
+    this.#_fieldsData.blockEndGame.classList.add("active");
+    this.#_fieldsData.wrapper.classList.add("block");
+    this.#_fieldsData.fieldWinner.textContent = "Переможцем є: " + winer;
 
     const gameSave = new GameSaves();
     const wins = gameSave.addWins(winer, this.#_playerOne);
 
-    this.#_property.fieldAllWin.textContent = `Всього перемог: x = ${wins.allWins.playerOne}. 0 = ${wins.allWins.playerTwo}.`;
-    this.#_property.fieldCurrentWin.textContent = `Всього перемог в сеансі: х = ${wins.currentWins.playerOne}. 0 = ${wins.currentWins.playerTwo}.`;
+    this.#_fieldsData.fieldAllWin.textContent = `Всього перемог: x = ${wins.allWins.playerOne}. 0 = ${wins.allWins.playerTwo}.`;
+    this.#_fieldsData.fieldCurrentWin.textContent = `Всього перемог в сеансі: х = ${wins.currentWins.playerOne}. 0 = ${wins.currentWins.playerTwo}.`;
   }
 }
 
-const property = new Property();
+const fieldsData = new FieldsData();
 
-const button = property.buttonOptions;
+const button = fieldsData.buttonOptions;
 button.addEventListener("click", () => {
   let numberField = document.querySelector("#number-field").value;
   numberField = parseInt(numberField);
@@ -334,13 +326,13 @@ button.addEventListener("click", () => {
   let numberFieldsToWin = document.querySelector("#number-field-to-win").value;
   numberFieldsToWin = parseInt(numberFieldsToWin);
 
-  if (numberField >= 3 && numberField <= 100) {
-    property.blockOptions.classList.remove("active");
+  if (numberField >= 3 && numberField <= 100 && numberFieldsToWin >= 3) {
+    fieldsData.blockOptions.classList.remove("active");
 
-    const game = new TicTacToe(numberField, property, numberFieldsToWin);
+    const game = new TicTacToe(numberField, fieldsData, numberFieldsToWin);
     game.start();
 
-    property.gameField.addEventListener("click", function (event) {
+    fieldsData.gameField.addEventListener("click", function (event) {
       if (event.target.closest(".field")) {
         game.changeSide(event.target);
       }
