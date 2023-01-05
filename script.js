@@ -90,6 +90,7 @@ class FieldsData {
 }
 
 class TicTacToe {
+  #_isPlaying = true;
   #_isFirstStepPlayer = true;
   #listFields;
 
@@ -118,6 +119,7 @@ class TicTacToe {
   }
 
   constructor(numberField, property, numberFieldsToWin) {
+    this.#_isPlaying = true;
     this.#_numberField = numberField;
     this.#_fieldsData = property;
 
@@ -130,12 +132,12 @@ class TicTacToe {
   }
 
   start() {
-    this.#_fieldsData.gameField.style.grid = `repeat(${this.#_numberField}, 1fr) / repeat(${this.#_numberField}, 1fr)`;
     this.#createGameField(this.#_numberField);
   }
 
   changeSide(target) {
     if (target.textContent != "") return;
+    if (!this.#_isPlaying) return;
 
     if (this.#_isFirstStepPlayer == true) {
       target.textContent = this.playerOne.type;
@@ -144,12 +146,15 @@ class TicTacToe {
     }
 
     this.#_isFirstStepPlayer = !this.#_isFirstStepPlayer;
-    this.#checkWiner(this.#_numberField);
+
     this.#_counterSteps++;
     if (this.#_counterSteps >= this.counterFields) {
       this.#_fieldsData.blockEndGame.classList.add("active");
-      this.#_fieldsData.fieldWinner.textContent = "Winer is none";
+      const textWinerNone = "Winer is none";
+      this.#_fieldsData.fieldWinner.textContent = textWinerNone;
     }
+
+    this.#checkWiner(this.#_numberField);
   }
 
   #createGameField(numberField) {
@@ -160,14 +165,20 @@ class TicTacToe {
     }
 
     this.#listFields = document.querySelectorAll(".field");
-    this.changeFontSize();
+
     this.changeSizeField();
+    this.changeFontSize();
   }
 
   changeSizeField() {
+    this.#_fieldsData.gameField.style.grid =
+      `repeat(${this.#_numberField}, 1fr) / repeat(${this.#_numberField}, 1fr)`;
+
     const bound = document.querySelector(".field").getBoundingClientRect();
+
     const size = Math.min(bound.height, bound.width);
-    this.#_fieldsData.gameField.style.grid = `repeat(${this.#_numberField}, ${size}px) / repeat(${this.#_numberField}, ${size}px)`;
+    this.#_fieldsData.gameField.style.grid =
+      `repeat(${this.#_numberField}, ${size}px) / repeat(${this.#_numberField}, ${size}px)`;
   }
 
   changeFontSize() {
@@ -232,6 +243,7 @@ class TicTacToe {
         return false;
       }
     }
+
     return true;
   }
 
@@ -263,6 +275,7 @@ class TicTacToe {
         return false;
       }
     }
+
     return true;
   }
 
@@ -285,6 +298,7 @@ class TicTacToe {
         return false;
       }
     }
+
     return true;
   }
 
@@ -300,7 +314,6 @@ class TicTacToe {
 
   #endGame(startIndex, stepWin, winer) {
     for (let i = 0, step = startIndex; i < this.#_numberFieldsToWin; i++, step += stepWin) {
-      console.log(step);
       this.#listFields[step].classList.add("winner");
     }
 
@@ -311,8 +324,14 @@ class TicTacToe {
     const gameSave = new GameSaves();
     const wins = gameSave.addWins(winer, this.#_playerOne);
 
-    this.#_fieldsData.fieldAllWin.textContent = `Всього перемог: x = ${wins.allWins.playerOne}. 0 = ${wins.allWins.playerTwo}.`;
-    this.#_fieldsData.fieldCurrentWin.textContent = `Всього перемог в сеансі: х = ${wins.currentWins.playerOne}. 0 = ${wins.currentWins.playerTwo}.`;
+    const textAllwin = `Всього перемог: x = ${wins.allWins.playerOne}, 0 = ${wins.allWins.playerTwo}.`;
+    const textCurrentWin =
+      `Всього перемог в сеансі: х = ${wins.currentWins.playerOne}, 0 = ${wins.currentWins.playerTwo}.`;
+
+    this.#_fieldsData.fieldAllWin.textContent = textAllwin;
+    this.#_fieldsData.fieldCurrentWin.textContent = textCurrentWin;
+
+    this.#_isPlaying = false;
   }
 }
 
@@ -326,7 +345,7 @@ button.addEventListener("click", () => {
   let numberFieldsToWin = document.querySelector("#number-field-to-win").value;
   numberFieldsToWin = parseInt(numberFieldsToWin);
 
-  if (numberField >= 3 && numberField <= 100 && numberFieldsToWin >= 3) {
+  if (numberField >= 3 && numberField <= 100 && numberFieldsToWin >= 2 && numberFieldsToWin <= numberField) {
     fieldsData.blockOptions.classList.remove("active");
 
     const game = new TicTacToe(numberField, fieldsData, numberFieldsToWin);
@@ -340,6 +359,7 @@ button.addEventListener("click", () => {
 
     window.addEventListener("resize", () => {
       game.changeFontSize();
+      game.changeSizeField();
     });
   }
 });

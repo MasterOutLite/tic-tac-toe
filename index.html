@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" class="full-screan">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="style.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Tic Tac Toe</title>
-  </head>
+  <link rel="stylesheet" href="reset.css" />
+  <link rel="stylesheet" href="style.css" />
 
-  <body class="full-screan">
-    <main class="wrapper">
-      <section class="block-options active">
-        <div class="block-options__container">
-          <label class="label" for="number-field">Введіть розмірність ігрового поля</label>
-          <input type="number" name="" value="3" min="3" max="100" id="number-field" class="block-options__input" />
-          <label class="label" for="number-field-to-win">Введіть кількість символів для перемоги</label>
-          <input type="number" name="" value="3" min="3" max="100" id="number-field-to-win" class="block-options__input" />
-          <button class="block-options__button">Підтвердити</button>
-        </div>
-      </section>
+  <title>Tic Tac Toe</title>
+</head>
 
-      <section class="game-field__container">
-        <div id="game-field" class="game-field"></div>
-      </section>
+<body class="full-screan">
+  <main class="wrapper">
+    <section class="block-options active">
+      <div class="block-options__container">
+        <label class="label" for="number-field">Введіть розмірність ігрового поля</label>
+        <input type="number" name="" value="3" min="3" max="100" id="number-field" class="block-options__input" />
+        <label class="label" for="number-field-to-win">Введіть кількість символів для перемоги</label>
+        <input type="number" name="" value="3" min="3" max="100" id="number-field-to-win"
+          class="block-options__input" />
+        <button class="block-options__button">Підтвердити</button>
+      </div>
+    </section>
 
-      <section class="block-end-game">
-        <div class="block-end-game__contant">
-          <span id="all-win" class="text-win"></span>
-          <span id="current-win" class="text-win"></span>
-          <span id="end-game__out" class="end-game__out"></span>
-        </div>
-      </section>
-    </main>
-    <script src="script.js"></script>
-  </body>
+    <section class="game-field__container">
+      <div id="game-field" class="game-field"></div>
+    </section>
+
+    <section class="block-end-game">
+      <div class="block-end-game__contant">
+        <span id="all-win" class="text-win"></span>
+        <span id="current-win" class="text-win"></span>
+        <span id="end-game__out" class="end-game__out"></span>
+        <a href="" class="block-end-game__reset">Reset</a>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+
 </html>

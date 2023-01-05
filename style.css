@@ -167,6 +167,18 @@
   user-select: none;
 }
 
+.block-end-game__reset {
+  padding: 15px 60px;
+
+  border-radius: 12px;
+  background-color: azure;
+  color: black;
+  font-size: 26px;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
 @media (max-width: 570px) {
   .wrapper {
     padding: 10px;
