@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Toe</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header__container">
+        <h1 class="header__title">Tic Tac Toe</h1>
+      </div>
+    </header>
+    <main class="page">
+      <section class="container game__container">
+        <div class="game__area-wrapper">
+          <section id="game__area" class="game__area"></section>
+        </div>
+        <section class="game__properties">
+          <span id="player-step" class="game__properties-text">Зараз хід: </span>
+          <section class="game__container-properties">
+            <span class="game__properties-text">Розмір ігрового поля:</span>
+            <input class="game__properties-input" type="number" name="game-field-size" id="game-field-size" max="100" min="3" value="3" />
+          </section>
+          <section class="game__container-properties">
+            <span class="game__properties-text">Кількість клітинок для перемоги:</span>
+            <input class="game__properties-input" type="number" name="amaunt-fields-to-win" id="amaunt-fields-to-win" max="100" min="2" value="3" />
+          </section>
+
+          <button id="game__apply" class="game__apply">Застосувати</button>
+        </section>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="container header__container">
+        <span class="footer__text">GitHub: MasterOutLite</span>
+      </div>
+    </footer>
+
+    <script src="js/atribute.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/tic-tac-toe.js"></script>
+
+    <script src="script.js"></script>
+  </body>
+</html>

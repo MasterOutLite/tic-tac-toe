@@ -1,0 +1,133 @@
+:root {
+  --white: #eddddd;
+  --red: #ff0000;
+  --page-bg: #00ffff;
+  --header-bg: #a52a2a;
+  --footer-bg: #8a2be2;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+/* header */
+.header {
+  box-sizing: border-box;
+  padding: 15px;
+  background-color: var(--header-bg);
+}
+
+.header__title {
+  font-size: 30px;
+  color: var(--white);
+}
+
+/* main */
+.page {
+  background-color: var(--page-bg);
+}
+
+.game__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.game__area-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+
+  background-color: rgb(32, 130, 216);
+}
+
+.game__area {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  justify-content: center;
+
+  width: 100%;
+}
+
+.field {
+  text-transform: uppercase;
+  text-align: center;
+  border: 1px solid var(--red);
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.winner {
+  background-color: var(--red);
+}
+
+.game__properties {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  box-sizing: border-box;
+  width: fit-content;
+  padding: 20px;
+
+  border-radius: 5px;
+  color: var(--white);
+  background-color: rgb(0, 88, 165);
+}
+
+.game__container-properties {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  box-sizing: border-box;
+  width: 100%;
+  padding: 15px;
+}
+
+.game__properties-text {
+  font-size: 30px;
+  user-select: none;
+}
+
+.game__properties-input {
+  font-size: 20px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.game__apply {
+  padding: 15px;
+
+  font-size: 20px;
+  background-color: orange;
+  border: 0;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+/* footer */
+
+.footer {
+  box-sizing: border-box;
+  padding: 15px;
+  background-color: var(--footer-bg);
+}
+
+.footer__text {
+  font-size: 20px;
+  color: var(--white);
+}
+
+@media (min-width: 990px) {
+  .game__area-wrapper {
+    padding: 40px;
+  }
+}
