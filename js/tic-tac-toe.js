@@ -26,16 +26,19 @@ class TicTacToe {
     this.areaSize = fieldsSize;
     this.amauntFieldsToWin = amauntFieldsToWin;
 
-    let element = document.getElementById("game__area");
-    while (element.firstChild) {
-      element.firstChild.remove();
-    }
-
+    this.clearFields();
     this.createGameArea();
     this.changeSizeField();
     this.isPlaying = true;
     this.saveData();
     this.setPlayerStep();
+  }
+
+  clearFields() {
+    let element = document.getElementById("game__area");
+    while (element.firstChild) {
+      element.firstChild.remove();
+    }
   }
 
   saveData() {

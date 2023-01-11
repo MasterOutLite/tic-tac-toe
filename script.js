@@ -21,6 +21,18 @@ function resizeGameArea() {
   }
 }
 
+eventStorage();
+window.addEventListener("storage", eventStorage);
+function eventStorage() {
+  game = new TicTacToe(atribute, 0, 0);
+  game.clearFields();
+  const data = game.loadData();
+  if (data) {
+    atribute.gameFieldSize.value = data.sizeArea;
+    atribute.amauntToWin.value = data.amauntFieldsToWin;
+  }
+}
+
 atribute.buttonApply.addEventListener("click", applyGameProperties);
 function applyGameProperties() {
   const fieldsSize = Number(atribute.gameFieldSize.value);
@@ -41,11 +53,4 @@ function applyGameProperties() {
   game.changeSizeField();
   game.changeFontField();
   game.saveData();
-}
-
-game = new TicTacToe(atribute, 0, 0);
-const data = game.loadData();
-if (data) {
-  atribute.gameFieldSize.value = data.sizeArea;
-  atribute.amauntToWin.value = data.amauntFieldsToWin;
 }
