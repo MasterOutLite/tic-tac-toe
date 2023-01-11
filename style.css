@@ -58,6 +58,7 @@
   text-transform: uppercase;
   text-align: center;
   border: 1px solid var(--red);
+  color: var(--white);
 
   cursor: pointer;
   user-select: none;
