@@ -35,6 +35,7 @@ class TicTacToe {
     this.changeSizeField();
     this.isPlaying = true;
     this.saveData();
+    this.setPlayerStep();
   }
 
   saveData() {
