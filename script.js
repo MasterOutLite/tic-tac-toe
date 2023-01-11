@@ -36,7 +36,16 @@ function applyGameProperties() {
   }
 
   game = new TicTacToe(atribute, fieldsSize, amauntToWin);
+
   game.createGameArea();
   game.changeSizeField();
   game.changeFontField();
+  game.saveData();
+}
+
+game = new TicTacToe(atribute, 0, 0);
+const data = game.loadData();
+if (data) {
+  atribute.gameFieldSize.value = data.sizeArea;
+  atribute.amauntToWin.value = data.amauntFieldsToWin;
 }

@@ -34,6 +34,36 @@ class TicTacToe {
     this.createGameArea();
     this.changeSizeField();
     this.isPlaying = true;
+    this.saveData();
+  }
+
+  saveData() {
+    const listSave = [];
+
+    for (let i = 0; i < this.listFields.length; i++) {
+      listSave.push(this.listFields[i].textContent);
+    }
+    const save = new GameData(this.areaSize, this.amauntFieldsToWin, listSave, this.isFirstStepPlayer);
+    GameSaves.saveData("local", save);
+  }
+
+  loadData() {
+    const data = GameSaves.loadData("local");
+
+    this.areaSize = data.sizeArea;
+    this.isFirstStepPlayer = data.isFirstStepPlayer;
+    this.amauntFieldsToWin = data.amauntFieldsToWin;
+    this.createGameArea();
+    this.setDataInFields(data.listFields);
+    this.#checkWiner();
+    this.setPlayerStep();
+    return data;
+  }
+
+  setDataInFields(listSave) {
+    for (let i = 0; i < this.listFields.length; i++) {
+      this.listFields[i].textContent = listSave[i];
+    }
   }
 
   setPlayerStep() {
@@ -85,6 +115,7 @@ class TicTacToe {
     this.isFirstStepPlayer = !this.isFirstStepPlayer;
     this.setPlayerStep();
 
+    this.saveData();
     this.amauntSteps++;
     this.#checkWiner(this.areaSize);
   }
