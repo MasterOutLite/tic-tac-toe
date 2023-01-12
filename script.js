@@ -1,11 +1,13 @@
 "use strict";
 
 const atribute = new Atribute();
+const windowControler = new WindowControler(atribute);
 let game;
 
 atribute.gameArea.addEventListener("click", function (event) {
   if (event.target.closest(".field") && game) {
     game.changeSide(event.target);
+    GameSaves.saveData("local", game);
   }
 });
 
@@ -16,21 +18,27 @@ function resizeGameArea() {
 
   atribute.gameArea.style.height = gameAreaBounding.width + "px";
   if (game) {
-    game.changeSizeField();
-    game.changeFontField();
+    windowControler.changeSizeField(game.areaSize);
+    windowControler.changeFontField();
   }
 }
 
 eventStorage();
 window.addEventListener("storage", eventStorage);
 function eventStorage() {
-  game = new TicTacToe(atribute, 0, 0);
-  game.clearFields();
-  const data = game.loadData();
-  if (data) {
-    atribute.gameFieldSize.value = data.sizeArea;
-    atribute.amauntToWin.value = data.amauntFieldsToWin;
+  game = GameSaves.loadData("local");
+  if (!game) {
+    return;
   }
+  game.checkWiner();
+  atribute.gameFieldSize.value = game.areaSize;
+  atribute.amauntToWin.value = game.amauntFieldsToWin;
+  resizeGameArea();
+}
+
+function resizeWindow(areaSize) {
+  windowControler.changeSizeField(areaSize);
+  windowControler.changeFontField();
 }
 
 atribute.buttonApply.addEventListener("click", applyGameProperties);
@@ -43,14 +51,15 @@ function applyGameProperties() {
   }
 
   if (game) {
-    game.restart(fieldsSize, amauntToWin);
+    game.restart(resizeWindow, fieldsSize, amauntToWin);
+    GameSaves.saveData("local", game);
     return;
   }
 
   game = new TicTacToe(atribute, fieldsSize, amauntToWin);
 
   game.createGameArea();
-  game.changeSizeField();
-  game.changeFontField();
-  game.saveData();
+  windowControler.changeSizeField(fieldsSize);
+  windowControler.changeFontField();
+  GameSaves.saveData("local", game);
 }

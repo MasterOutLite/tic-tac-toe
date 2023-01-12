@@ -15,7 +15,14 @@ class GameData {
 }
 
 class GameSaves {
-  static saveData(key, data) {
+  static saveData(key, game) {
+    const listSave = [];
+    for (let i = 0; i < game.listFields.length; i++) {
+      listSave.push(game.listFields[i].textContent);
+    }
+
+    const data = new GameData(game.areaSize, game.amauntFieldsToWin, listSave, game.isFirstStepPlayer);
+
     const save = JSON.stringify(data);
     localStorage.setItem(key, save);
   }
@@ -23,6 +30,18 @@ class GameSaves {
   static loadData(key) {
     const save = localStorage.getItem(key);
     const data = JSON.parse(save);
-    return data;
+
+    if (!data) {
+      return null;
+    }
+
+    const atribut = new Atribute();
+    const game = new TicTacToe(atribut, data.sizeArea, data.amauntFieldsToWin);
+    game.isFirstStepPlayer = data.isFirstStepPlayer;
+    game.createGameArea();
+    game.setDataInFields(data.listFields);
+    game.checkWiner();
+    game.setPlayerStep();
+    return game;
   }
 }

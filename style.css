@@ -126,9 +126,3 @@
   font-size: 20px;
   color: var(--white);
 }
-
-@media (min-width: 990px) {
-  .game__area-wrapper {
-    padding: 40px;
-  }
-}

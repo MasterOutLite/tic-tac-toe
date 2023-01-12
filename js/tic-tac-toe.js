@@ -12,6 +12,7 @@ class TicTacToe {
   amauntFieldsToWin = 3;
 
   atribute;
+  uiControler;
 
   constructor(atribute, fieldsSize, amauntFieldsToWin) {
     this.atribute = atribute;
@@ -20,62 +21,28 @@ class TicTacToe {
 
     this.playerOne = new Player("X");
     this.playerTwo = new Player("0");
+    this.uiControler = new UIControler(atribute);
   }
 
-  restart(fieldsSize, amauntFieldsToWin) {
+  restart(resizeCallBack, fieldsSize, amauntFieldsToWin) {
+    this.#clearFields();
     this.areaSize = fieldsSize;
     this.amauntFieldsToWin = amauntFieldsToWin;
-
-    this.clearFields();
     this.createGameArea();
-    this.changeSizeField();
-    this.isPlaying = true;
-    this.saveData();
-    this.setPlayerStep();
+    resizeCallBack(this.areaSize);
   }
 
-  clearFields() {
+  #clearFields() {
     let element = document.getElementById("game__area");
     while (element.firstChild) {
       element.firstChild.remove();
     }
   }
 
-  saveData() {
-    const listSave = [];
-
-    for (let i = 0; i < this.listFields.length; i++) {
-      listSave.push(this.listFields[i].textContent);
-    }
-    const save = new GameData(this.areaSize, this.amauntFieldsToWin, listSave, this.isFirstStepPlayer);
-    GameSaves.saveData("local", save);
-  }
-
-  loadData() {
-    const data = GameSaves.loadData("local");
-
-    this.areaSize = data.sizeArea;
-    this.isFirstStepPlayer = data.isFirstStepPlayer;
-    this.amauntFieldsToWin = data.amauntFieldsToWin;
-    this.createGameArea();
-    this.setDataInFields(data.listFields);
-    this.#checkWiner();
-    this.setPlayerStep();
-    return data;
-  }
-
   setDataInFields(listSave) {
     for (let i = 0; i < this.listFields.length; i++) {
       this.listFields[i].textContent = listSave[i];
     }
-  }
-
-  setPlayerStep() {
-    this.atribute.playerStep.textContent = `Зараз хід: ${this.isFirstStepPlayer ? this.playerOne.type : this.playerTwo.type}`;
-  }
-
-  setPlayerWin() {
-    this.atribute.playerStep.textContent = `Переміг: ${!this.isFirstStepPlayer ? this.playerOne.type : this.playerTwo.type}`;
   }
 
   createGameArea() {
@@ -85,25 +52,8 @@ class TicTacToe {
       this.atribute.gameArea.append(field);
     }
     this.listFields = document.querySelectorAll(".field");
-
-    this.changeSizeField();
-    this.changeFontField();
-  }
-
-  changeSizeField() {
-    this.atribute.gameArea.style.grid = `repeat(${this.areaSize}, 1fr) / repeat(${this.areaSize}, 1fr)`;
-
-    const bound = document.querySelector(".field").getBoundingClientRect();
-
-    const size = Math.min(bound.height, bound.width);
-    this.atribute.gameArea.style.grid = `repeat(${this.areaSize}, ${size}px) / repeat(${this.areaSize}, ${size}px)`;
-  }
-
-  changeFontField() {
-    const bound = document.querySelector(".field").getBoundingClientRect();
-    const size = Math.min(bound.height, bound.width);
-    const fontSize = Math.floor(size - size * 0.2);
-    this.atribute.gameArea.style.fontSize = fontSize + "px";
+    this.setPlayerStep();
+    this.isPlaying = true;
   }
 
   changeSide(target) {
@@ -119,12 +69,11 @@ class TicTacToe {
     this.isFirstStepPlayer = !this.isFirstStepPlayer;
     this.setPlayerStep();
 
-    this.saveData();
     this.amauntSteps++;
-    this.#checkWiner(this.areaSize);
+    this.checkWiner();
   }
 
-  #checkWiner() {
+  checkWiner() {
     for (let i = 0; i < this.listFields.length; i++) {
       let typeField = this.listFields[i].textContent;
       if (!typeField) continue;
@@ -153,11 +102,7 @@ class TicTacToe {
 
   checkDiagonalRight(index) {
     for (let field = index, i = 0; i < this.amauntFieldsToWin; field += this.areaSize + 1, i++) {
-      if (!this.#checkLimit(field)) {
-        return false;
-      }
-
-      if (!this.#checkTypeFields(index, field)) {
+      if (!this.#checkLimit(field) || !this.#checkTypeFields(index, field)) {
         return false;
       }
     }
@@ -167,15 +112,7 @@ class TicTacToe {
 
   checkDiagonalLeft(index) {
     for (let field = index, i = 0; i < this.amauntFieldsToWin; field += this.areaSize - 1, i++) {
-      if (!this.#checkLimit(field)) {
-        return false;
-      }
-
-      if (!this.#checkLimitStart(index) && i != 0) {
-        return false;
-      }
-
-      if (!this.#checkTypeFields(index, field)) {
+      if (!this.#checkLimit(field) || !this.#checkTypeFields(index, field) || (!this.#checkLimitStart(index) && i != 0)) {
         return false;
       }
     }
@@ -185,11 +122,7 @@ class TicTacToe {
 
   checkDiagonalVertical(index) {
     for (let field = index, i = 0; i < this.amauntFieldsToWin; field += this.areaSize, i++) {
-      if (!this.#checkLimit(field)) {
-        return false;
-      }
-
-      if (!this.#checkTypeFields(index, field)) {
+      if (!this.#checkLimit(field) || !this.#checkTypeFields(index, field)) {
         return false;
       }
     }
@@ -199,15 +132,7 @@ class TicTacToe {
 
   checkDiagonalHorizontal(index) {
     for (let field = index, i = 0; i < this.amauntFieldsToWin; field += 1, i++) {
-      if (!this.#checkLimit(field)) {
-        return false;
-      }
-
-      if (!this.#checkLimitEnd(field) && field != index) {
-        return false;
-      }
-
-      if (!this.#checkTypeFields(index, field)) {
+      if (!this.#checkLimit(field) || (!this.#checkLimitEnd(field) && field != index) || !this.#checkTypeFields(index, field)) {
         return false;
       }
     }
@@ -253,7 +178,11 @@ class TicTacToe {
       this.listFields[step].classList.add("winner");
     }
 
-    this.setPlayerWin();
+    this.uiControler.setPlayerWin(winer);
     this.isPlaying = false;
+  }
+
+  setPlayerStep() {
+    this.uiControler.setPlayerStep(this.isFirstStepPlayer ? this.playerOne.type : this.playerTwo.type);
   }
 }
