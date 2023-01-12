@@ -18,8 +18,7 @@ function resizeGameArea() {
 
   atribute.gameArea.style.height = gameAreaBounding.width + "px";
   if (game) {
-    windowControler.changeSizeField(game.areaSize);
-    windowControler.changeFontField();
+    resizeWindow(game.areaSize);
   }
 }
 
